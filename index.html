@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Soulmigo | Premium Yoga Collective</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Inter:wght@300;400;600&family=Outfit:wght@200;300;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2D5F3E;
+            /* Forest Green */
+            --secondary: #C4704B;
+            /* Terracotta */
+            --champagne: #F2E8DF;
+            --ebony: #1A1A1A;
+            --bg-glass: rgba(255, 255, 255, 0.45);
+            --text-main: #1A1A1A;
+            --text-light: #4A4A4A;
+            --transition-slow: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+            --transition-fast: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            background-color: var(--champagne);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- Noise Texture Overlay --- */
+        .noise-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://grainy-gradients.vercel.app/noise.svg');
+            opacity: 0.05;
+            z-index: 9999;
+            pointer-events: none;
+            mix-blend-mode: overlay;
+        }
+
+        /* --- Fullscreen Background --- */
+        .page-wrapper {
+            position: relative;
+            min-height: 100vh;
+            width: 100%;
+            background-image: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.60) 100%),
+                url('mat.png');
+            background-size: cover;
+            background-position: center center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition-slow);
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at 30% 60%, rgba(45,95,62,0.15) 0%, rgba(0,0,0,0.0) 70%);
+            pointer-events: none;
+        }
+
+        /* --- Header --- */
+        header {
+            position: relative;
+            z-index: 100;
+            padding: 40px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: fadeIn 1.5s ease-out;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            font-weight: 500;
+            letter-spacing: -1.5px;
+            color: #FFFFFF;
+            text-transform: lowercase;
+            text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+        }
+
+        .launch-tag {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            padding: 10px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(12px);
+            color: #FFFFFF;
+        }
+
+        /* --- Hero Content --- */
+        .content {
+            position: relative;
+            z-index: 50;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 8% 60px;
+            max-width: 1600px;
+        }
+
+        .main-title {
+            font-family: 'Bodoni Moda', serif;
+            font-size: clamp(3.5rem, 12vw, 8rem);
+            line-height: 0.9;
+            font-weight: 500;
+            margin-bottom: 32px;
+            letter-spacing: -2px;
+            color: #EAEAEA;
+            text-shadow: none;
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 1.2s 0.2s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        .main-title span {
+            font-style: italic;
+            color: #FFFFFF;
+            font-weight: 500;
+        }
+
+        .description {
+            font-size: clamp(1.1rem, 1.5vw, 1.4rem);
+            max-width: 580px;
+            margin-bottom: 48px;
+            font-weight: 300;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.88);
+            letter-spacing: 0.2px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 1.2s 0.4s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+
+        /* --- Form (Enhanced Glassmorphism) --- */
+        .signup-card {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            padding: 32px;
+            border-radius: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 540px;
+            transform: translateY(40px);
+            opacity: 0;
+            animation: slideUp 1.2s 0.6s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+            position: relative;
+        }
+
+        .scarcity-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--secondary);
+            margin-bottom: 16px;
+        }
+
+        .signup-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+            color: var(--ebony);
+        }
+
+        .signup-card p {
+            font-size: 0.95rem;
+            color: #666;
+            margin-bottom: 32px;
+            line-height: 1.5;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            position: relative;
+            z-index: 2;
+        }
+
+        input[type="email"] {
+            flex: 1;
+            padding: 20px 24px;
+            border-radius: 32px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            outline: none;
+            transition: var(--transition-fast);
+            color: var(--ebony);
+        }
+
+        input[type="email"]:focus {
+            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 6px rgba(45, 95, 62, 0.08);
+        }
+
+        .btn-submit {
+            background: var(--secondary);
+            border: none;
+            width: 110px;
+            height: 64px;
+            border-radius: 32px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .btn-submit:hover {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .btn-submit img {
+            width: 80px;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* --- Footer --- */
+        footer {
+            position: relative;
+            z-index: 100;
+            padding: 40px 60px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.55);
+            display: flex;
+            justify-content: space-between;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* --- Animations --- */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideLeft {
+            from {
+                opacity: 0;
+                transform: translateX(60px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(199, 112, 75, 0.4);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 10px rgba(199, 112, 75, 0);
+            }
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 1200px) {
+            .features-grid {
+                display: none;
+            }
+
+            .content {
+                padding: 0 5% 60px;
+                align-items: center;
+                text-align: center;
+            }
+
+            .main-title {
+                font-size: clamp(3rem, 10vw, 5.5rem);
+                margin: 0 auto 32px;
+            }
+
+            .description {
+                margin: 0 auto 48px;
+            }
+
+            header {
+                padding: 30px 20px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .signup-card {
+                padding: 40px 24px;
+                border-radius: 30px;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .btn-submit {
+                width: 100%;
+                height: 60px;
+            }
+
+            .main-title {
+                font-size: 2.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+
+    <div class="page-wrapper" id="parallax-bg">
+        <div class="overlay"></div>
+
+        <header>
+            <div class="logo">soulmigo <span style="color: #C4704B;">yoga socks</span></div>
+            <div class="launch-tag">Exclusive September 2026 Launch</div>
+        </header>
+
+        <main class="content">
+            <h1 class="main-title">
+                Your flow
+                <span>perfected</span>
+            </h1>
+            <p class="description">
+                Where movement meets intention. Join the collective this September.
+            </p>
+
+            <div class="signup-card" id="hero-card">
+                <h3>Join the Collective</h3>
+                <form action="#" method="post">
+                    <div class="form-row">
+                        <input type="email" name="EMAIL" placeholder="Enter your email" required>
+                        <button type="submit" class="btn-submit">
+                            <img src="../logos transp/logo-removebg-preview.png" alt="Soulmigo">
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+
+        <footer>
+            <span>&copy; 2026 Soulmigo Ltd.</span>
+            <span>Est. UK &bull; Glasgow</span>
+        </footer>
+    </div>
+</body>
+
+</html>
