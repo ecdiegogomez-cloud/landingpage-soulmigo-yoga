@@ -243,6 +243,25 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
+        /* Success message */
+        .success-message {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        .success-message.show {
+            display: block;
+        }
+        .success-message h4 {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+        .success-message p {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
         .btn-submit img {
             width: 80px;
             height: auto;
@@ -377,17 +396,21 @@
             </p>
 
             <div class="signup-card" id="hero-card">
-                <h3>Join the Collective</h3>
-                <form action="https://assets.mailerlite.com/jsonp/2213159/forms/182677428452197540/subscribe" method="POST" target="_blank">
+                <h3 id="form-title">Join the Collective</h3>
+                <form id="waitlist-form">
                     <input type="hidden" name="ml-submit" value="1">
                     <input type="hidden" name="anticsrf" value="true">
-                    <div class="form-row">
-                        <input type="email" name="fields[email]" placeholder="Enter your email" required>
-                        <button type="submit" class="btn-submit">
+                    <div class="form-row" id="form-row">
+                        <input type="email" name="fields[email]" id="email-input" placeholder="Enter your email" required>
+                        <button type="submit" class="btn-submit" id="submit-btn">
                             <img src="logo-removebg-preview.png" alt="Soulmigo">
                         </button>
                     </div>
                 </form>
+                <div class="success-message" id="success-message">
+                    <h4>Welcome to the Collective!</h4>
+                    <p>You're on the list. We'll be in touch soon.</p>
+                </div>
             </div>
         </main>
 
@@ -396,6 +419,36 @@
             <span>Est. UK &bull; Glasgow</span>
         </footer>
     </div>
+
+    <script>
+        document.getElementById('waitlist-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email-input').value;
+            const formData = new FormData();
+            formData.append('fields[email]', email);
+            formData.append('ml-submit', '1');
+            formData.append('anticsrf', 'true');
+
+            const submitBtn = document.getElementById('submit-btn');
+
+            try {
+                const response = await fetch('https://assets.mailerlite.com/jsonp/2213159/forms/182677428452197540/subscribe', {
+                    method: 'POST',
+                    body: formData,
+                    mode: 'no-cors'
+                });
+
+                // Hide form, show success message
+                document.getElementById('form-row').style.display = 'none';
+                document.getElementById('form-title').style.display = 'none';
+                document.getElementById('success-message').classList.add('show');
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
 </body>
 
 </html>
